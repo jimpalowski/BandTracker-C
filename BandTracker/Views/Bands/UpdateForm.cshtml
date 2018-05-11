@@ -1,0 +1,10 @@
+<h1>Band Tracker</h1>
+<hr />
+<h2>Edit task: @Model.GetDescription()</h2>
+<form action="/bands/@Model.GetId()/update" method="post">
+  <label for="name">New description:</label>
+  <input type="text" name="newname" value="@Model.GetDescription()">
+  <button type="submit">Edit</button>
+</form>
+
+<h4><a href="/bands">Return home</a></h4>
