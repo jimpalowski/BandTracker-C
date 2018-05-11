@@ -16,20 +16,28 @@ namespace BandTracker.Models
       _name = venueName;
       _id = venue_id;
     }
-    public override bool Equals(System.Object otherVenue)
+    public string GetName()
     {
-      if (!(otherVenue is Venue))
-      {
-        return false;
-      }
-      else
-      {
-        Venue newVenue = (Venue) otherVenue;
-        bool idEquality = this.GetId() == newVenue.GetId();
-        bool nameEquality = this.GetName() == newVenue.GetName();
-        return (idEquality && nameEquality);
-      }
+      return _name;
+    }
+    public int GetId()
+    {
+      return _id;
+    }
 
+    public void SetId(int newId)
+    {
+      _id = newId;
+    }
+
+    public void SetName(string newName)
+    {
+      _name = newName;
+    }
+
+    public void SetList(List<Band> bands)
+    {
+      _bands = bands;
     }
 
     public List<Band> GetBands()
@@ -65,7 +73,6 @@ namespace BandTracker.Models
       return bands;
     }
 
-
     public void AddBand(Band newBand)
     {
       MySqlConnection conn = DB.Connection();
@@ -91,32 +98,6 @@ namespace BandTracker.Models
       }
     }
 
-    public string GetName()
-    {
-      return _name;
-    }
-    public int GetId()
-    {
-      return _id;
-    }
-
-    public void SetId(int newId)
-    {
-      _id = newId;
-    }
-
-    public void SetName(string newName)
-    {
-      _name = newName;
-    }
-
-    public void SetList(List<Band> bands)
-    {
-      _bands = bands;
-    }
-
-
-
     public void Save()
     {
       MySqlConnection conn = DB.Connection();
@@ -129,8 +110,6 @@ namespace BandTracker.Models
       name.ParameterName = "@name";
       name.Value = this._name;
       cmd.Parameters.Add(name);
-
-      // Code to declare, set, and add values to a categoryId SQL parameters has also been removed.
 
       cmd.ExecuteNonQuery();
       _id = (int) cmd.LastInsertedId;
@@ -187,11 +166,7 @@ namespace BandTracker.Models
       {
         venueId = rdr.GetInt32(0);
         venueName = rdr.GetString(1);
-        //    itemDueDate = rdr.GetString(2);
-        // We no longer read the itemCategoryId here, either.
       }
-
-      // Constructor below no longer includes a itemCategoryId parameter:
       Venue newVenue = new Venue(venueName, venueId);
       //  newCategory.SetDate(ItemDueDate);
       conn.Close();
@@ -199,41 +174,7 @@ namespace BandTracker.Models
       {
         conn.Dispose();
       }
-
       return newVenue;
-    }
-
-    public static void Delete(int id)
-    {
-      MySqlConnection conn = DB.Connection();
-      conn.Open();
-
-      MySqlCommand cmd = new MySqlCommand("DELETE FROM venues WHERE id = @VenueId; DELETE FROM bands_venues WHERE venue_id = @VenueId;", conn);
-      MySqlParameter venueIdParameter = new MySqlParameter();
-      venueIdParameter.ParameterName = "@VenueId";
-      venueIdParameter.Value = id;
-
-      cmd.Parameters.Add(venueIdParameter);
-      cmd.ExecuteNonQuery();
-
-      if (conn != null)
-      {
-        conn.Close();
-      }
-    }
-
-    public static void DeleteAll()
-    {
-      MySqlConnection conn = DB.Connection();
-      conn.Open();
-      var cmd = conn.CreateCommand() as MySqlCommand;
-      cmd.CommandText = @"DELETE FROM venues;";
-      cmd.ExecuteNonQuery();
-      conn.Close();
-      if (conn != null)
-      {
-        conn.Dispose();
       }
     }
   }
-}

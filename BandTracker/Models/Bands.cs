@@ -8,39 +8,14 @@ namespace BandTracker.Models
   public class Band
   {
     private string _description;
-    private bool _isDone;
     private int _id;
 
-    // We no longer declare _categoryId here
 
-    public Band(string description, int id = 0, bool done = false)
+    public Band(string description, int id = 0)
     {
       _description = description;
       _id = id;
-      // categoryId is removed from the constructor
     }
-
-    public override bool Equals(System.Object otherBand)
-    {
-      if (!(otherBand is Band))
-      {
-        return false;
-      }
-      else
-      {
-        Band newBand = (Band) otherBand;
-        bool idEquality = this.GetId() == newBand.GetId();
-        bool descriptionEquality = this.GetDescription() == newBand.GetDescription();
-        //  bool dueDateEquality = this.GetDate() == newItem.GetDate();
-        // We no longer compare Items' categoryIds in a categoryEquality bool here.
-        return (idEquality && descriptionEquality);
-      }
-    }
-    public override int GetHashCode()
-    {
-      return this.GetDescription().GetHashCode();
-    }
-
     public string GetDescription()
     {
       return _description;
@@ -50,26 +25,6 @@ namespace BandTracker.Models
     {
       return _id;
     }
-
-    // public string GetDate()
-    // {
-    //     return _dueDate;
-    // }
-
-    public bool GetDone()
-    {
-      return _isDone;
-    }
-
-    public void SetDone(bool maybeDone)
-    {
-      _isDone = maybeDone;
-    }
-
-    // public void SetDate(string newDate)
-    // {
-    //     _dueDate = newDate;
-    // }
 
     public void AddVenue(Venue newVenue)
     {
@@ -147,8 +102,6 @@ namespace BandTracker.Models
       return venues;
     }
 
-    // We've removed the GetCategoryId() method entirely.
-
     public void Save()
     {
       MySqlConnection conn = DB.Connection();
@@ -170,7 +123,6 @@ namespace BandTracker.Models
         conn.Dispose();
       }
     }
-
     public static List<Band> GetAll()
     {
       List<Band> allBands = new List<Band> {};
@@ -182,12 +134,10 @@ namespace BandTracker.Models
       while(rdr.Read())
       {
         int bandId = rdr.GetInt32(0);
-        //   string itemDueDate = rdr.GetString(2);
         string bandDescription = rdr.GetString(1);
-        // We no longer need to read categoryIds from our items table here.
-        // Constructor below no longer includes a itemCategoryId parameter:
+
         Band newBand = new Band(bandDescription, bandId);
-        //newItem.SetDate(itemDueDate);
+
         allBands.Add(newBand);
       }
       conn.Close();
@@ -197,7 +147,6 @@ namespace BandTracker.Models
       }
       return allBands;
     }
-
     public static Band Find(int id)
     {
       MySqlConnection conn = DB.Connection();
@@ -218,17 +167,14 @@ namespace BandTracker.Models
       {
         bandId = rdr.GetInt32(0);
         bandName = rdr.GetString(1);
-
       }
-
       Band newBand = new Band(bandName, bandId);
-      //  newItem.SetDate(ItemDueDate);
+
       conn.Close();
       if (conn != null)
       {
         conn.Dispose();
       }
-
       return newBand;
     }
     public void UpdateDescription(string newDescription)
@@ -255,42 +201,7 @@ namespace BandTracker.Models
       {
         conn.Dispose();
       }
-
     }
-
-    public static void Delete(int id)
-    {
-      MySqlConnection conn = DB.Connection();
-      conn.Open();
-      var cmd = conn.CreateCommand() as MySqlCommand;
-      cmd.CommandText = @"DELETE FROM bands_venues WHERE venue_id = @BandId;";
-      // cmd.CommandText = @"DELETE FROM cities_flights WHERE city_id = @CityId;";
-
-      MySqlParameter bandIdParameter = new MySqlParameter();
-      bandIdParameter.ParameterName = "@BandId";
-      bandIdParameter.Value = id;
-      cmd.Parameters.Add(bandIdParameter);
-
-      cmd.ExecuteNonQuery();
-      if (conn != null)
-      {
-        conn.Close();
-      }
-    }
-
-    // public static void DeleteAll()
-    // {
-    //     MySqlConnection conn = DB.Connection();
-    //     conn.Open();
-    //     var cmd = conn.CreateCommand() as MySqlCommand;
-    //     cmd.CommandText = @"DELETE FROM cities;";
-    //     cmd.ExecuteNonQuery();
-    //     conn.Close();
-    //     if (conn != null)
-    //     {
-    //         conn.Dispose();
-    //     }
-    // }
     public void Edit(string newDescription)
     {
       MySqlConnection conn = DB.Connection();
