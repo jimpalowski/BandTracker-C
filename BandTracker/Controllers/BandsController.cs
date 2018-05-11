@@ -78,5 +78,6 @@ namespace BandTracker.Controllers
       thisBand.Edit(Request.Form["newname"]);
       return RedirectToAction("Details");
     }
+    
   }
 }
