@@ -1,0 +1,7 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "/Users/vjs/.nuget/packages"
+    ]
+  }
+}

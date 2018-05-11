@@ -1,0 +1,9 @@
+/Users/vjs/Desktop/Band_Tracker-C/BandTracker/bin/Debug/netcoreapp1.1/bandtracker.deps.json
+/Users/vjs/Desktop/Band_Tracker-C/BandTracker/bin/Debug/netcoreapp1.1/bandtracker.runtimeconfig.json
+/Users/vjs/Desktop/Band_Tracker-C/BandTracker/bin/Debug/netcoreapp1.1/bandtracker.runtimeconfig.dev.json
+/Users/vjs/Desktop/Band_Tracker-C/BandTracker/bin/Debug/netcoreapp1.1/bandtracker.dll
+/Users/vjs/Desktop/Band_Tracker-C/BandTracker/bin/Debug/netcoreapp1.1/bandtracker.pdb
+/Users/vjs/Desktop/Band_Tracker-C/BandTracker/obj/Debug/netcoreapp1.1/bandtracker.csproj.CoreCompileInputs.cache
+/Users/vjs/Desktop/Band_Tracker-C/BandTracker/obj/Debug/netcoreapp1.1/bandtracker.AssemblyInfo.cs
+/Users/vjs/Desktop/Band_Tracker-C/BandTracker/obj/Debug/netcoreapp1.1/bandtracker.dll
+/Users/vjs/Desktop/Band_Tracker-C/BandTracker/obj/Debug/netcoreapp1.1/bandtracker.pdb
