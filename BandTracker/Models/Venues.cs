@@ -9,14 +9,15 @@ namespace BandTracker.Models
   {
     private string _name;
     private int _id;
-   // private string _time;
+    private string _address;
     private List<Band> _bands;
 
-    public Venue(string venueName, int venue_id = 0)
+    public Venue(string venueName, string venueAddress, int venue_id = 0)
     {
       _name = venueName;
       _id = venue_id;
-      // _time = time;
+      _address = venueAddress;
+
     }
     public string GetName()
     {
@@ -35,16 +36,14 @@ namespace BandTracker.Models
     {
       _id = newId;
     }
-    // public string GetTime()
-    // {
-    //   return _time;
-    // }
-    // public void SetTime(string newTime)
-    // {
-    //   _time = newTime;
-    // }
-
-
+    public string GetAddess()
+    {
+      return _address;
+    }
+    public void SetAddress(string newAddress)
+    {
+      _address = newAddress;
+    }
 
     public void SetList(List<Band> bands)
     {
@@ -69,6 +68,7 @@ namespace BandTracker.Models
     public override int GetHashCode()
     {
          return this.GetName().GetHashCode();
+
     }
 
     public List<Band> GetBands()
@@ -121,6 +121,11 @@ namespace BandTracker.Models
       band_id.Value = newBand.GetId();
       cmd.Parameters.Add(band_id);
 
+      // MySqlParameter venueAddress = new MySqlParameter();
+      // venueAddress.ParameterName = "@VenueAddress";
+      // venueAddress.Value = newBand.GetId();
+      // cmd.Parameters.Add(venueAddress);
+
       cmd.ExecuteNonQuery();
       conn.Close();
       if (conn != null)
@@ -135,17 +140,17 @@ namespace BandTracker.Models
       conn.Open();
 
       var cmd = conn.CreateCommand() as MySqlCommand;
-      cmd.CommandText = @"INSERT INTO venues (name) VALUES (@name;";
+      cmd.CommandText = @"INSERT INTO venues (name, address) VALUES (@name, @address);";
 
       MySqlParameter name = new MySqlParameter();
       name.ParameterName = "@name";
       name.Value = this._name;
       cmd.Parameters.Add(name);
 
-      // MySqlParameter time = new MySqlParameter();
-      // time.ParameterName = "@time";
-      // time.Value = this._time;
-      // cmd.Parameters.Add(time);
+      MySqlParameter address = new MySqlParameter();
+      address.ParameterName = "@address";
+      address.Value = this._address;
+      cmd.Parameters.Add(address);
 
       cmd.ExecuteNonQuery();
       _id = (int) cmd.LastInsertedId;
@@ -168,11 +173,16 @@ namespace BandTracker.Models
       {
         int venueId = rdr.GetInt32(0);
         string venueName = rdr.GetString(1);
-        string venueTime = rdr.GetString(2);
+        string venueAddress = rdr.GetString(2);
 
-        Venue newVenue = new Venue(venueName);
-        newVenue.SetId(venueId);
-        allVenues.Add(newVenue);
+        Venue newVenue = new Venue(venueName, venueAddress, venueId);
+        // newVenue.SetId(venueId);
+        // allVenues.Add(newVenue);
+       allVenues.Add(newVenue);
+        //
+        // Venue newAddress = new Venue(venueAddress);
+        // newAddress.SetId(venueId);
+        // allVenues.Add(newVenue);
       }
       conn.Close();
       if (conn != null)
@@ -197,17 +207,16 @@ namespace BandTracker.Models
       var rdr = cmd.ExecuteReader() as MySqlDataReader;
       int venueId = 0;
       string venueName = "";
-      // string venueTime = "";
-      //string itemDueDate = "";
-      // We remove the line setting a itemCategoryId value here.
+      string venueAddress = "";
 
       while(rdr.Read())
       {
         venueId = rdr.GetInt32(0);
         venueName = rdr.GetString(1);
+        venueAddress = rdr.GetString(2);
         // venueTime = rdr.GetString(2);
       }
-      Venue newVenue = new Venue(venueName, venueId);
+      Venue newVenue = new Venue(venueName, venueAddress, venueId);
       //  newCategory.SetDate(ItemDueDate);
       conn.Close();
       if (conn != null)

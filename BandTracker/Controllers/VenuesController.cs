@@ -22,7 +22,7 @@ namespace BandTracker.Controllers
     [HttpPost("/venues")]
     public ActionResult Create()
     {
-      Venue newVenue = new Venue(Request.Form["venue-name"]);
+      Venue newVenue = new Venue(Request.Form["venue-name"], Request.Form["venue-address"]);
       newVenue.Save();
       return RedirectToAction("Success", "Home");
     }
@@ -34,6 +34,7 @@ namespace BandTracker.Controllers
       List<Band> venueBands = selectedVenue.GetBands();
       List<Band> allBands = Band.GetAll();
       model.Add("selectedVenue", selectedVenue);
+      // model.Add("this-address", selectedVenue);
       model.Add("venueBands", venueBands);
       model.Add("allBands", allBands);
       return View(model);

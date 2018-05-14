@@ -110,7 +110,8 @@ namespace BandTracker.Models
         {
           int thisVenueId = venueQueryRdr.GetInt32(0);
           string venueName = venueQueryRdr.GetString(1);
-          Venue foundVenue = new Venue(venueName, thisVenueId);
+          string venueAddress = venueQueryRdr.GetString(2);
+          Venue foundVenue = new Venue(venueName, venueAddress, thisVenueId);
           venues.Add(foundVenue);
         }
         venueQueryRdr.Dispose();
