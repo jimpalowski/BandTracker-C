@@ -7,17 +7,17 @@
 @using BandTracker.Models;
 <h2>Band: @Model["selectedBand"].GetDescription()</h2>
 
-@if (@Model["bandVenues"].Count != 0)
-{
-  <h4>This band has these venues:</h4>
+  @if (@Model["bandVenues"].Count != 0)
+  {
+    <h4>This band has these venues:</h4>
     @foreach (Venue venue in @Model["bandVenues"])
-
     {
-        <ul>
-      <li>@venue.GetName()</li>
-        </ul>
+    <ul>
+    <li>@venue.GetName()</li>
+    </ul>
+      
     }
-}
+  }
 <hr />
 <h4>Add a venue to this band:</h4>
 <form action='/bands/@Model["selectedBand"].GetId()/venues/new' method='post'>
@@ -30,6 +30,8 @@
   </select>
   <button type='submit'>Add</button>
 </form>
-  <br>
+<br>
 <a class="btn btn-primary" href="/bands/@Model["selectedBand"].GetId()/update" role="button">Update Band</a>
 <a class="btn btn-primary" href="/" role="button">Return to Main Page</a>
+
+  </div>

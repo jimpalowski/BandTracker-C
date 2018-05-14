@@ -9,16 +9,22 @@ namespace BandTracker.Models
   {
     private string _name;
     private int _id;
+   // private string _time;
     private List<Band> _bands;
 
     public Venue(string venueName, int venue_id = 0)
     {
       _name = venueName;
       _id = venue_id;
+      // _time = time;
     }
     public string GetName()
     {
       return _name;
+    }
+    public void SetName(string newName)
+    {
+      _name = newName;
     }
     public int GetId()
     {
@@ -29,15 +35,40 @@ namespace BandTracker.Models
     {
       _id = newId;
     }
+    // public string GetTime()
+    // {
+    //   return _time;
+    // }
+    // public void SetTime(string newTime)
+    // {
+    //   _time = newTime;
+    // }
 
-    public void SetName(string newName)
-    {
-      _name = newName;
-    }
+
 
     public void SetList(List<Band> bands)
     {
       _bands = bands;
+    }
+    public override bool Equals(System.Object otherVenue)
+    {
+      if (!(otherVenue is Venue))
+      {
+        return false;
+      }
+      else
+      {
+        Venue newVenue = (Venue) otherVenue;
+        bool idEquality = this.GetId() == newVenue.GetId();
+        bool nameEquality = this.GetName() == newVenue.GetName();
+
+        return (idEquality && nameEquality);
+      }
+    }
+
+    public override int GetHashCode()
+    {
+         return this.GetName().GetHashCode();
     }
 
     public List<Band> GetBands()
@@ -104,12 +135,17 @@ namespace BandTracker.Models
       conn.Open();
 
       var cmd = conn.CreateCommand() as MySqlCommand;
-      cmd.CommandText = @"INSERT INTO venues (name) VALUES (@name);";
+      cmd.CommandText = @"INSERT INTO venues (name) VALUES (@name;";
 
       MySqlParameter name = new MySqlParameter();
       name.ParameterName = "@name";
       name.Value = this._name;
       cmd.Parameters.Add(name);
+
+      // MySqlParameter time = new MySqlParameter();
+      // time.ParameterName = "@time";
+      // time.Value = this._time;
+      // cmd.Parameters.Add(time);
 
       cmd.ExecuteNonQuery();
       _id = (int) cmd.LastInsertedId;
@@ -132,6 +168,8 @@ namespace BandTracker.Models
       {
         int venueId = rdr.GetInt32(0);
         string venueName = rdr.GetString(1);
+        string venueTime = rdr.GetString(2);
+
         Venue newVenue = new Venue(venueName);
         newVenue.SetId(venueId);
         allVenues.Add(newVenue);
@@ -159,6 +197,7 @@ namespace BandTracker.Models
       var rdr = cmd.ExecuteReader() as MySqlDataReader;
       int venueId = 0;
       string venueName = "";
+      // string venueTime = "";
       //string itemDueDate = "";
       // We remove the line setting a itemCategoryId value here.
 
@@ -166,6 +205,7 @@ namespace BandTracker.Models
       {
         venueId = rdr.GetInt32(0);
         venueName = rdr.GetString(1);
+        // venueTime = rdr.GetString(2);
       }
       Venue newVenue = new Venue(venueName, venueId);
       //  newCategory.SetDate(ItemDueDate);
@@ -176,5 +216,37 @@ namespace BandTracker.Models
       }
       return newVenue;
       }
+      public static void Delete(int id)
+    {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+
+      MySqlCommand cmd = new MySqlCommand("DELETE FROM venues WHERE id = @VenueId; DELETE FROM bands_venues WHERE venue_id = @VenueId;", conn);
+      MySqlParameter venueIdParameter = new MySqlParameter();
+      venueIdParameter.ParameterName = "@VenueId";
+      venueIdParameter.Value = id;
+
+      cmd.Parameters.Add(venueIdParameter);
+      cmd.ExecuteNonQuery();
+
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
+    public static void DeleteAll()
+    {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      var cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"DELETE FROM venues;";
+      cmd.ExecuteNonQuery();
+      conn.Close();
+      if (conn != null)
+      {
+        conn.Dispose();
+      }
     }
   }
+}

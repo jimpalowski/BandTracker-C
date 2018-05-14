@@ -25,6 +25,27 @@ namespace BandTracker.Models
     {
       return _id;
     }
+    public override bool Equals(System.Object otherBand)
+    {
+      if (!(otherBand is Band))
+      {
+        return false;
+      }
+      else
+      {
+         Band newBand = (Band) otherBand;
+         bool idEquality = this.GetId() == newBand.GetId();
+         bool descriptionEquality = this.GetDescription() == newBand.GetDescription();
+        //  bool dueDateEquality = this.GetDate() == newItem.GetDate();
+         // We no longer compare Items' categoryIds in a categoryEquality bool here.
+         return (idEquality && descriptionEquality);
+       }
+    }
+    public override int GetHashCode()
+    {
+         return this.GetDescription().GetHashCode();
+    }
+
 
     public void AddVenue(Venue newVenue)
     {
@@ -228,21 +249,38 @@ namespace BandTracker.Models
         conn.Dispose();
       }
     }
-    public static void DeleteAll()
-{
-  MySqlConnection conn = DB.Connection();
-  conn.Open();
 
-  var cmd = conn.CreateCommand() as MySqlCommand;
-  cmd.CommandText = @"DELETE FROM bands; DELETE FROM bands_venues;";
-
-  cmd.ExecuteNonQuery();
-  conn.Close();
-
-  if(conn != null)
+    public static void Delete(int id)
   {
-    conn.Dispose();
+    MySqlConnection conn = DB.Connection();
+    conn.Open();
+
+    MySqlCommand cmd = new MySqlCommand("DELETE FROM bands WHERE id = @BandId; DELETE FROM bands_venues WHERE band_id = @BandId;", conn);
+    MySqlParameter bandIdParameter = new MySqlParameter();
+    bandIdParameter.ParameterName = "@BandId";
+    bandIdParameter.Value = id;
+
+    cmd.Parameters.Add(bandIdParameter);
+    cmd.ExecuteNonQuery();
+
+    if (conn != null)
+    {
+      conn.Close();
+    }
+  }
+
+  public static void DeleteAll()
+  {
+    MySqlConnection conn = DB.Connection();
+    conn.Open();
+    var cmd = conn.CreateCommand() as MySqlCommand;
+    cmd.CommandText = @"DELETE FROM bands;";
+    cmd.ExecuteNonQuery();
+    conn.Close();
+    if (conn != null)
+    {
+      conn.Dispose();
+    }
   }
 }
-  }
 }

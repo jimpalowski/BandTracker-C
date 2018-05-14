@@ -11,6 +11,10 @@
     @foreach (var band in Model)
     {
       <li><a href='/bands/@band.GetId()'>@band.GetDescription()</a></li>
+      <form action='/bands/@band.GetId()/delete' method="post">
+            <button class="btn btn-danger" type="submit">Remove</button>
+            </form>
+
     }
   </ul>
 }

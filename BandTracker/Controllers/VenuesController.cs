@@ -46,5 +46,11 @@ namespace BandTracker.Controllers
       venue.AddBand(band);
       return RedirectToAction("Details",  new { id = venueId });
     }
+    [HttpPost("/venues/{id}/delete")]
+     public ActionResult DeleteVenue(int id)
+     {
+     Venue.Delete(id);
+     return RedirectToAction("Details", "Venues", new { id = id });
+  }
   }
 }

@@ -79,5 +79,13 @@ namespace BandTracker.Controllers
       return RedirectToAction("Details");
     }
     
+      [HttpPost("/bands/{id}/delete")]
+      public ActionResult DeleteBand(int id)
+      {
+      Band.Delete(id);
+      return RedirectToAction("Details", "Bands", new { id = id });
+   }
+
+
   }
 }
